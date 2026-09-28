@@ -1,0 +1,862 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Project Metis · R&D Research Roadmap</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        fontFamily: {
+          sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI',
+                 'SF Pro Text', 'Roboto', 'Helvetica Neue', 'Arial', 'sans-serif'],
+        },
+        colors: {
+          lightbg: '#f8fafc', cardbg: '#ffffff', cardborder: '#e2e8f0',
+          textmain: '#0f172a', textmuted: '#64748b',
+          p1sky: '#0284c7', p2indigo: '#4f46e5', p3emerald: '#059669', p4amber: '#d97706',
+        },
+        fontSize: { 'xs': '0.8125rem', 'sm': '0.9375rem', 'base': '1.0625rem' }
+      }
+    }
+  }
+</script>
+
+<style>
+  html { scroll-behavior: smooth; }
+  body {
+    background: #f8fafc;
+    color: #0f172a;
+    font-size: 17px;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI',
+                 'SF Pro Text', 'Roboto', 'Helvetica Neue', 'Arial', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-feature-settings: 'cv11', 'ss01';
+  }
+
+  /* Hide scrollbar but keep scrollability */
+  .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+  .no-scrollbar::-webkit-scrollbar { display: none; }
+
+  .custom-scrollbar::-webkit-scrollbar { width: 6px; height: 6px; }
+  .custom-scrollbar::-webkit-scrollbar-track { background: #f1f5f9; }
+  .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
+
+  /* Tab buttons */
+  .tab-btn {
+    border-bottom: 3px solid transparent;
+    padding-bottom: 8px;
+    color: #64748b;
+    font-weight: 500;
+    font-size: 15px;
+    transition: all 0.18s ease;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .tab-btn:hover { color: #0f172a; }
+  .tab-btn.active-overview,
+  .tab-btn.active-cross { border-color: #0f172a; color: #0f172a; font-weight: 700; }
+  .tab-btn.active-p1 { border-color: #0284c7; color: #0284c7; font-weight: 700; }
+  .tab-btn.active-p2 { border-color: #4f46e5; color: #4f46e5; font-weight: 700; }
+  .tab-btn.active-p3 { border-color: #059669; color: #059669; font-weight: 700; }
+  .tab-btn.active-p4 { border-color: #d97706; color: #d97706; font-weight: 700; }
+
+  /* Sub-tabs */
+  .sub-tab {
+    border-bottom: 2px solid transparent;
+    padding-bottom: 10px;
+    padding-top: 10px;
+    color: #64748b;
+    font-weight: 600;
+    transition: all 0.15s ease;
+    font-size: 15.5px;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .sub-tab:hover { color: #0f172a; }
+  .sub-tab.active.sub-tab-p1 { border-color: #0284c7; color: #0284c7; }
+  .sub-tab.active.sub-tab-p2 { border-color: #4f46e5; color: #4f46e5; }
+  .sub-tab.active.sub-tab-p3 { border-color: #059669; color: #059669; }
+  .sub-tab.active.sub-tab-p4 { border-color: #d97706; color: #d97706; }
+
+  .copy-btn.copied { background: #059669 !important; color: #fff !important; border-color: #059669 !important; }
+
+  #toast {
+    transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+    transform: translate(-50%, 80px);
+    opacity: 0;
+    pointer-events: none;
+  }
+  #toast.show { transform: translate(-50%, 0); opacity: 1; pointer-events: auto; }
+
+  /* Font-size overrides */
+  .q-card h4 { font-size: 17px !important; line-height: 1.45 !important; }
+  .q-card > p { font-size: 16px !important; line-height: 1.75 !important; }
+  .q-card ul { font-size: 15px !important; line-height: 1.7 !important; }
+  .q-card ul li { font-size: 15px !important; line-height: 1.7 !important; }
+  .q-card .q-num { font-size: 12.5px !important; }
+  .q-card .q-tag { font-size: 12.5px !important; padding: 3px 9px !important; }
+  .resource-card h4 { font-size: 17px !important; line-height: 1.4 !important; }
+  .resource-card > p { font-size: 15px !important; line-height: 1.7 !important; }
+  .resource-card .r-type { font-size: 12.5px !important; padding: 3px 9px !important; }
+  .resource-card code { font-size: 13px !important; }
+  .phase-badge { font-size: 13px !important; }
+  .phase-title { font-size: 26px !important; }
+  .phase-desc { font-size: 16.5px !important; line-height: 1.75 !important; }
+  .phase-goal-label { font-size: 12px !important; }
+  .phase-goal-value { font-size: 18px !important; }
+  .section-desc { font-size: 16.5px !important; line-height: 1.75 !important; }
+  .pipeline-card h3 { font-size: 17px !important; }
+  .pipeline-card .pipeline-step { font-size: 13px !important; }
+  .pipeline-card .pipeline-member { font-size: 12px !important; }
+  .pipeline-card > p { font-size: 15px !important; line-height: 1.65 !important; }
+  .pipeline-card .pipeline-meta { font-size: 13px !important; line-height: 1.65 !important; }
+  .cross-item h4 { font-size: 17px !important; }
+  .cross-item p { font-size: 15px !important; line-height: 1.75 !important; }
+  .data-table { font-size: 15px !important; }
+  .data-table td, .data-table th { font-size: 15px !important; line-height: 1.65 !important; }
+  .data-table code { font-size: 13.5px !important; }
+  .hero-lede { font-size: 17.5px !important; line-height: 1.7 !important; }
+  .hero-title { font-size: 40px !important; }
+
+  /* Tab content scroll offset so it lands just below the sticky nav */
+  .tab-content { scroll-margin-top: 90px; }
+
+  /* ============ MOBILE OPTIMIZATIONS ============ */
+  @media (max-width: 768px) {
+    body { font-size: 16px; }
+    .hero-title { font-size: 30px !important; }
+    .phase-title { font-size: 22px !important; }
+    .phase-desc { font-size: 15.5px !important; }
+    .section-desc { font-size: 15.5px !important; }
+    .q-card h4 { font-size: 16px !important; }
+    .q-card > p { font-size: 15px !important; }
+    .q-card ul li { font-size: 14px !important; }
+    .resource-card h4 { font-size: 16px !important; }
+    .resource-card > p { font-size: 14.5px !important; }
+    .cross-item h4 { font-size: 16px !important; }
+    .cross-item p { font-size: 14.5px !important; }
+    .data-table td, .data-table th { font-size: 14px !important; }
+    .hero-lede { font-size: 16px !important; }
+  }
+
+  @media (max-width: 640px) {
+    .tab-btn {
+      font-size: 13.5px;
+      padding: 6px 12px 8px;
+    }
+    .sub-tab {
+      font-size: 14.5px;
+      padding: 10px 12px;
+    }
+  }
+</style>
+</head>
+<body class="p-4 md:p-8">
+
+  <header class="max-w-7xl mx-auto mb-6 bg-white border border-slate-200 rounded-2xl p-6 shadow-sm">
+    <div class="flex flex-wrap items-center gap-2 mb-3">
+      <span class="px-3 py-1 bg-slate-100 text-slate-800 text-sm font-bold rounded-full uppercase tracking-wider">Project Metis R&D Architecture</span>
+      <span class="px-3 py-1 bg-indigo-100 text-indigo-800 text-sm font-bold rounded-full uppercase tracking-wider">4-Member Engineering Division</span>
+      <span class="px-3 py-1 bg-amber-100 text-amber-800 text-sm font-bold rounded-full uppercase tracking-wider">RTX 3050 6GB Feasible</span>
+    </div>
+    <h1 class="hero-title font-black text-slate-900 tracking-tight">Intelligent LLM Gateway Research Roadmap</h1>
+    <p class="hero-lede text-slate-600 mt-3 max-w-4xl">
+      A structured execution framework across the request lifecycle: <strong class="text-slate-800">Layered Caching</strong>,
+      <strong class="text-slate-800">System-1 Routing</strong>, <strong class="text-slate-800">Context Optimization</strong>, and
+      <strong class="text-slate-800">Evaluation &amp; Observability</strong>. Each member owns one phase, investigates its
+      literature and tools, and proposes a concrete implementation plan matched to our hardware envelope.
+    </p>
+  </header>
+
+  <nav class="sticky top-0 z-40 bg-slate-50/95 backdrop-blur border-y border-slate-200 mb-6 -mx-4 md:-mx-8 px-4 md:px-8">
+    <div class="max-w-7xl mx-auto flex flex-nowrap md:flex-wrap gap-2 md:gap-6 py-2 md:py-3 overflow-x-auto no-scrollbar" id="tabNav">
+      <button data-tab="overview" class="tab-btn">Pipeline Architecture</button>
+      <button data-tab="p1" class="tab-btn">Phase 1: Caching</button>
+      <button data-tab="p2" class="tab-btn">Phase 2: Routing</button>
+      <button data-tab="p3" class="tab-btn">Phase 3: Context</button>
+      <button data-tab="p4" class="tab-btn">Phase 4: Evaluation</button>
+      <button data-tab="cross" class="tab-btn">Cross-Phase &amp; Hardware</button>
+    </div>
+  </nav>
+
+  <main class="max-w-7xl mx-auto space-y-8">
+
+    <div id="tab-overview" class="tab-content space-y-6">
+      <section class="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm">
+        <h2 class="text-xl font-bold text-slate-900 mb-2">How to use this roadmap</h2>
+        <p class="section-desc text-slate-600">
+          Pick a phase from the tab bar above. Inside each phase, switch between
+          <strong>Research Questions</strong> and <strong>Useful Resources</strong>.
+          Every resource card is a clickable link with a one-click copy button.
+          Navigate between phases with <kbd class="px-2 py-0.5 bg-slate-100 border border-slate-300 rounded text-[13px] font-mono">←</kbd>
+          <kbd class="px-2 py-0.5 bg-slate-100 border border-slate-300 rounded text-[13px] font-mono">→</kbd>
+          arrow keys.
+        </p>
+      </section>
+
+      <section class="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm">
+        <h2 class="text-xl font-bold text-slate-900 mb-2">Request Execution Lifecycle</h2>
+        <p class="section-desc text-slate-600 mb-5">
+          Every incoming prompt executes sequentially through the four team pillars. The goal is to maximize
+          cost reduction while enforcing strict latency and quality bounds.
+        </p>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div class="pipeline-card p-5 bg-sky-50 border-2 border-sky-500 rounded-xl hover:shadow-md transition cursor-pointer" data-goto="p1">
+            <div class="flex justify-between items-center mb-2">
+              <span class="pipeline-step text-sky-600 font-black uppercase">Step 1 — Phase 1</span>
+              <span class="pipeline-member px-2 py-0.5 bg-sky-200 text-sky-900 font-bold rounded-full">Member 1</span>
+            </div>
+            <h3 class="font-bold text-slate-900 mb-1">Layered Caching</h3>
+            <p class="text-slate-600 mb-3">Exact-match → semantic with NER verifier → provider prompt caching.</p>
+            <div class="pipeline-meta font-mono text-sky-800 bg-white/90 p-2.5 rounded border border-sky-200 space-y-1">
+              <div><strong>Latency:</strong> &lt; 5 ms lookup</div>
+              <div><strong>Precision:</strong> 0% false hits</div>
+            </div>
+          </div>
+
+          <div class="pipeline-card p-5 bg-indigo-50 border-2 border-indigo-500 rounded-xl hover:shadow-md transition cursor-pointer" data-goto="p2">
+            <div class="flex justify-between items-center mb-2">
+              <span class="pipeline-step text-indigo-600 font-black uppercase">Step 2 — Phase 2</span>
+              <span class="pipeline-member px-2 py-0.5 bg-indigo-200 text-indigo-900 font-bold rounded-full">Member 2</span>
+            </div>
+            <h3 class="font-bold text-slate-900 mb-1">Routing &amp; Decisions</h3>
+            <p class="text-slate-600 mb-3">RouteLLM CPU baseline or System-1 classifier with rate-limit fallbacks.</p>
+            <div class="pipeline-meta font-mono text-indigo-800 bg-white/90 p-2.5 rounded border border-indigo-200 space-y-1">
+              <div><strong>Decision:</strong> &lt; 15 ms</div>
+              <div><strong>Allocation:</strong> SLM vs Frontier</div>
+            </div>
+          </div>
+
+          <div class="pipeline-card p-5 bg-emerald-50 border-2 border-emerald-500 rounded-xl hover:shadow-md transition cursor-pointer" data-goto="p3">
+            <div class="flex justify-between items-center mb-2">
+              <span class="pipeline-step text-emerald-600 font-black uppercase">Step 3 — Phase 3</span>
+              <span class="pipeline-member px-2 py-0.5 bg-emerald-200 text-emerald-900 font-bold rounded-full">Member 3</span>
+            </div>
+            <h3 class="font-bold text-slate-900 mb-1">Context Optimization</h3>
+            <p class="text-slate-600 mb-3">Lossless Headroom pruning followed by entropy token reduction.</p>
+            <div class="pipeline-meta font-mono text-emerald-800 bg-white/90 p-2.5 rounded border border-emerald-200 space-y-1">
+              <div><strong>Pruning:</strong> 3×–5× compression</div>
+              <div><strong>Retention:</strong> &gt; 95% reasoning</div>
+            </div>
+          </div>
+
+          <div class="pipeline-card p-5 bg-amber-50 border-2 border-amber-500 rounded-xl hover:shadow-md transition cursor-pointer" data-goto="p4">
+            <div class="flex justify-between items-center mb-2">
+              <span class="pipeline-step text-amber-600 font-black uppercase">Step 4 — Phase 4</span>
+              <span class="pipeline-member px-2 py-0.5 bg-amber-200 text-amber-900 font-bold rounded-full">Member 4</span>
+            </div>
+            <h3 class="font-bold text-slate-900 mb-1">Eval &amp; Telemetry</h3>
+            <p class="text-slate-600 mb-3">DeepEval scoring, OpenTelemetry traces, transparency receipts.</p>
+            <div class="pipeline-meta font-mono text-amber-800 bg-white/90 p-2.5 rounded border border-amber-200 space-y-1">
+              <div><strong>Metric:</strong> Quality / $ saved</div>
+              <div><strong>Output:</strong> Headers &amp; sidecar</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm">
+        <h2 class="text-xl font-bold text-slate-900 mb-2">Summary Matrix — Team R&amp;D Allocation</h2>
+        <p class="text-slate-600 text-sm mb-4">Four phases, four leads, four primary benchmark metrics.</p>
+        <div class="overflow-x-auto">
+          <table class="data-table w-full text-left text-slate-600 border border-slate-200 rounded-lg overflow-hidden">
+            <thead class="bg-slate-100 text-slate-800 font-bold uppercase border-b border-slate-200">
+              <tr>
+                <th class="p-3">Phase / Pillar</th>
+                <th class="p-3 w-[140px] whitespace-nowrap">Lead</th>
+                <th class="p-3">Primary Technical Focus</th>
+                <th class="p-3">Key Target Metric</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-200">
+              <tr class="hover:bg-slate-50 cursor-pointer" data-goto="p1">
+                <td class="p-3 font-bold text-sky-600">Phase 1: Caching Layer</td>
+                <td class="p-3 font-semibold text-slate-900 whitespace-nowrap">Member 1</td>
+                <td class="p-3">Layered exact → semantic → prefix cache; NER false-hit mitigation; tenant isolation.</td>
+                <td class="p-3 font-mono font-bold text-sky-600">Cache hit &lt; 5 ms · 0% false hits</td>
+              </tr>
+              <tr class="hover:bg-slate-50 cursor-pointer" data-goto="p2">
+                <td class="p-3 font-bold text-indigo-600">Phase 2: Routing &amp; Decision Models</td>
+                <td class="p-3 font-semibold text-slate-900 whitespace-nowrap">Member 2</td>
+                <td class="p-3">RouteLLM-MF baseline; System-1 JevK5/SemIf; cascades; hardware feasibility.</td>
+                <td class="p-3 font-mono font-bold text-indigo-600">APGR % · decision &lt; 15 ms</td>
+              </tr>
+              <tr class="hover:bg-slate-50 cursor-pointer" data-goto="p3">
+                <td class="p-3 font-bold text-emerald-600">Phase 3: Context &amp; Prompt Optimization</td>
+                <td class="p-3 font-semibold text-slate-900 whitespace-nowrap">Member 3</td>
+                <td class="p-3">Lossless Headroom then entropy pruning (LLMLingua-2, DAC); output length control.</td>
+                <td class="p-3 font-mono font-bold text-emerald-600">3×–5× compression · &gt; 95% retention</td>
+              </tr>
+              <tr class="hover:bg-slate-50 cursor-pointer" data-goto="p4">
+                <td class="p-3 font-bold text-amber-600">Phase 4: Evaluation &amp; Observability</td>
+                <td class="p-3 font-semibold text-slate-900 whitespace-nowrap">Member 4</td>
+                <td class="p-3">DeepEval, OTel <code class="text-[13px]">gen_ai.*</code> traces, transparency receipts, public datasets.</td>
+                <td class="p-3 font-mono font-bold text-amber-600">Quality retained per $ saved</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="bg-gradient-to-br from-indigo-600 to-slate-900 text-white rounded-2xl p-8 md:p-10 shadow-sm">
+        <p class="text-xl md:text-2xl font-semibold max-w-3xl leading-relaxed">
+          "The core of the project is not building a gateway. It is <span class="text-sky-300">proving savings with data</span> — quality retained per dollar saved."
+        </p>
+        <p class="text-sm text-slate-300 mt-4">Every policy must be measured against the frozen baseline.</p>
+      </section>
+    </div>
+
+    <div id="tab-p1" class="tab-content hidden"></div>
+    <div id="tab-p2" class="tab-content hidden"></div>
+    <div id="tab-p3" class="tab-content hidden"></div>
+    <div id="tab-p4" class="tab-content hidden"></div>
+
+    <div id="tab-cross" class="tab-content hidden space-y-6">
+      <section class="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm">
+        <h2 class="text-xl font-bold text-slate-900 mb-2">Cross-Phase Dependencies</h2>
+        <p class="section-desc text-slate-600 mb-5">
+          Each phase depends on outputs from the others. These dependencies are explicit so the team
+          can plan handoffs and avoid duplicated work.
+        </p>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div class="cross-item p-5 bg-slate-50 border border-slate-200 rounded-xl flex gap-3">
+            <div class="flex-shrink-0 w-10 h-10 rounded-lg bg-indigo-100 text-indigo-600 flex items-center justify-center">
+              <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2v4M12 18v4M4.9 4.9l2.8 2.8M16.3 16.3l2.8 2.8M2 12h4M18 12h4M4.9 19.1l2.8-2.8M16.3 7.7l2.8-2.8"/></svg>
+            </div>
+            <div>
+              <h4 class="font-bold text-slate-900 mb-1">Baseline definition</h4>
+              <p class="text-slate-600">Owned jointly by all four members. Must be frozen before any policy is measured. "Always use the strongest model" is the denominator for all savings calculations.</p>
+            </div>
+          </div>
+          <div class="cross-item p-5 bg-slate-50 border border-slate-200 rounded-xl flex gap-3">
+            <div class="flex-shrink-0 w-10 h-10 rounded-lg bg-indigo-100 text-indigo-600 flex items-center justify-center">
+              <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M8 9h8M8 13h5"/></svg>
+            </div>
+            <div>
+              <h4 class="font-bold text-slate-900 mb-1">Transparency Receipt schema</h4>
+              <p class="text-slate-600">Touches all four phases. Member 4 leads, but all contribute fields. Includes normal cost, chosen optimization, final cost, quality retained, and net savings.</p>
+            </div>
+          </div>
+          <div class="cross-item p-5 bg-slate-50 border border-slate-200 rounded-xl flex gap-3">
+            <div class="flex-shrink-0 w-10 h-10 rounded-lg bg-indigo-100 text-indigo-600 flex items-center justify-center">
+              <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 8h16M4 8a2 2 0 012-2h12a2 2 0 012 2M4 8v10a2 2 0 002 2h12a2 2 0 002-2V8"/><circle cx="8" cy="14" r="1"/></svg>
+            </div>
+            <div>
+              <h4 class="font-bold text-slate-900 mb-1">Candidate model pool</h4>
+              <p class="text-slate-600">Defined by Member 2, but shared with Member 1 (cache key) and Member 3 (compression threshold per model). Changes require re-embedding for CLM.</p>
+            </div>
+          </div>
+          <div class="cross-item p-5 bg-slate-50 border border-slate-200 rounded-xl flex gap-3">
+            <div class="flex-shrink-0 w-10 h-10 rounded-lg bg-indigo-100 text-indigo-600 flex items-center justify-center">
+              <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z"/></svg>
+            </div>
+            <div>
+              <h4 class="font-bold text-slate-900 mb-1">False-hit test suite</h4>
+              <p class="text-slate-600">Built by Member 4 but used daily by Member 1. Curated tricky pairs: entity swaps, negation, time-sensitive queries. Run before every semantic-cache change.</p>
+            </div>
+          </div>
+          <div class="cross-item p-5 bg-slate-50 border border-slate-200 rounded-xl flex gap-3">
+            <div class="flex-shrink-0 w-10 h-10 rounded-lg bg-indigo-100 text-indigo-600 flex items-center justify-center">
+              <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3l2.6 5.6L21 9.3l-4.5 4.2L17.8 20 12 16.8 6.2 20l1.3-6.5L3 9.3l6.4-.7z"/></svg>
+            </div>
+            <div>
+              <h4 class="font-bold text-slate-900 mb-1">Public data strategy</h4>
+              <p class="text-slate-600">Owned by Member 4 but informs Member 3's quality regression suite. Synthetic and public datasets reduce dependence on real Metis data per the confidentiality brief.</p>
+            </div>
+          </div>
+          <div class="cross-item p-5 bg-slate-50 border border-slate-200 rounded-xl flex gap-3">
+            <div class="flex-shrink-0 w-10 h-10 rounded-lg bg-indigo-100 text-indigo-600 flex items-center justify-center">
+              <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 12h4l3-8 4 16 3-8h4"/></svg>
+            </div>
+            <div>
+              <h4 class="font-bold text-slate-900 mb-1">Compression ↔ Routing latency</h4>
+              <p class="text-slate-600">Member 3's compression threshold must align with Member 2's routing latency budget. Compression adds pre-processing latency before the router runs.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm">
+        <h2 class="text-xl font-bold text-slate-900 mb-2">Hardware Feasibility Matrix</h2>
+        <p class="section-desc text-slate-600 mb-4">
+          Team-wide constraint: RTX 3050 6 GB / 16 GB RAM, with Colab / Kaggle as fallback.
+        </p>
+        <div class="overflow-x-auto">
+          <table class="data-table w-full text-left text-slate-600 border border-slate-200 rounded-lg overflow-hidden">
+            <thead class="bg-slate-100 text-slate-800 font-bold uppercase border-b border-slate-200">
+              <tr>
+                <th class="p-3">Component / Model</th>
+                <th class="p-3">Memory</th>
+                <th class="p-3">Feasibility</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-200">
+              <tr><td class="p-3 font-mono">RouteLLM-MF (CPU)</td><td class="p-3">&lt; 200 MB RAM</td><td class="p-3 font-bold text-emerald-600">Full — zero GPU cost</td></tr>
+              <tr><td class="p-3 font-mono">BGE-M3 / Nomic Embed</td><td class="p-3">~1.2 GB VRAM</td><td class="p-3 font-bold text-emerald-600">Full — fast inference</td></tr>
+              <tr><td class="p-3 font-mono">LLMLingua-2 (XLM-R)</td><td class="p-3">~1.5 GB VRAM</td><td class="p-3 font-bold text-emerald-600">Full — fast compression</td></tr>
+              <tr><td class="p-3 font-mono">decider-2b (QLoRA)</td><td class="p-3">~3.8 GB VRAM</td><td class="p-3 font-bold text-emerald-600">Full — RTX 3050 fine-tune</td></tr>
+              <tr><td class="p-3 font-mono">SemIf (llama.cpp Q4)</td><td class="p-3">~2.8 GB RAM</td><td class="p-3 font-bold text-emerald-600">Full — CPU execution</td></tr>
+              <tr><td class="p-3 font-mono">JevK5 4B / CLM-8B</td><td class="p-3">&gt; 8 GB VRAM</td><td class="p-3 font-bold text-amber-600">Colab T4 / hosted API</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm">
+        <h2 class="text-xl font-bold text-slate-900 mb-2">Weekly Rhythm &amp; Deliverables</h2>
+        <p class="section-desc text-slate-600 mb-5">
+          A lightweight cadence keeps the team aligned without adding overhead.
+        </p>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div class="cross-item p-5 bg-slate-50 border border-slate-200 rounded-xl flex gap-3">
+            <div class="flex-shrink-0 w-10 h-10 rounded-lg bg-slate-200 text-slate-700 flex items-center justify-center">
+              <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 12h11M11 6l6 6-6 6"/><circle cx="20" cy="12" r="1.6"/></svg>
+            </div>
+            <div>
+              <h4 class="font-bold text-slate-900 mb-1">Weekly R&amp;D update</h4>
+              <p class="text-slate-600">Each member gives a 15-minute update: one paper, one tool, one open question. Cross-phase dependencies are surfaced early.</p>
+            </div>
+          </div>
+          <div class="cross-item p-5 bg-slate-50 border border-slate-200 rounded-xl flex gap-3">
+            <div class="flex-shrink-0 w-10 h-10 rounded-lg bg-slate-200 text-slate-700 flex items-center justify-center">
+              <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 12l2 2 4-4M21 12a9 9 0 11-9-9"/></svg>
+            </div>
+            <div>
+              <h4 class="font-bold text-slate-900 mb-1">Decisions log</h4>
+              <p class="text-slate-600">Every build/skip decision is captured with justification. The log becomes the backbone of the final report.</p>
+            </div>
+          </div>
+          <div class="cross-item p-5 bg-slate-50 border border-slate-200 rounded-xl flex gap-3">
+            <div class="flex-shrink-0 w-10 h-10 rounded-lg bg-slate-200 text-slate-700 flex items-center justify-center">
+              <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M8 9h8M8 13h5"/></svg>
+            </div>
+            <div>
+              <h4 class="font-bold text-slate-900 mb-1">Per-member R&amp;D report</h4>
+              <p class="text-slate-600">4–6 pages covering literature, tools, techniques, open questions, and a concrete recommendation. Plus a prototype or demo if feasible.</p>
+            </div>
+          </div>
+          <div class="cross-item p-5 bg-slate-50 border border-slate-200 rounded-xl flex gap-3">
+            <div class="flex-shrink-0 w-10 h-10 rounded-lg bg-slate-200 text-slate-700 flex items-center justify-center">
+              <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="7" cy="8" r="3"/><circle cx="17" cy="8" r="3"/><circle cx="12" cy="17" r="3"/><path d="M7 11l5 4M17 11l-5 4"/></svg>
+            </div>
+            <div>
+              <h4 class="font-bold text-slate-900 mb-1">Integrated architecture doc</h4>
+              <p class="text-slate-600">The team jointly produces a single document mapping the four phases onto the request lifecycle and identifying the minimum viable implementation.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+  </main>
+
+  <footer class="max-w-7xl mx-auto mt-12 pt-6 border-t border-slate-200 text-center text-sm text-slate-400 pb-8">
+    <p>Project Metis · Intelligent LLM Gateway R&amp;D Research Roadmap</p>
+    <p class="mt-1">Single-Page Interactive Application for a 4-Member Engineering Team</p>
+  </footer>
+
+  <div id="toast" class="fixed bottom-8 left-1/2 bg-slate-900 text-white px-5 py-3 rounded-xl text-sm font-semibold border border-slate-700 shadow-xl z-50 flex items-center gap-2">
+    <svg class="w-4 h-4 text-emerald-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6L9 17l-5-5"/></svg>
+    <span id="toastMsg">Link copied</span>
+  </div>
+
+<script>
+(function(){
+  'use strict';
+
+  var PHASES = [
+    {
+      id: 'p1', num: 1, badge: 'Pillar 1 — Member 1 Lead',
+      title: 'Phase 1: Caching Layer',
+      desc: 'Intercepting requests at the frontline to serve cached responses using dense embeddings, vector stores, and entity-verification. Layered approach: exact-match → semantic with strict verification → provider-native prompt caching.',
+      goalLabel: 'Primary Goal', goalValue: '< 5 ms latency · 0% false hits',
+      styles: { badge: 'bg-sky-100 text-sky-700', goalBg: 'bg-sky-50', goalBorder: 'border-sky-200', goalLabel: 'text-sky-600', goalValue: 'text-sky-700', tag: 'bg-sky-100 text-sky-800', subActive: 'sub-tab-p1', qHover: 'hover:border-sky-300' },
+      questions: [
+        { topic: 'Architecture', tags: ['Sequential tiers', 'LiteLLM cache'], q: 'What is the optimal layered architecture? Should exact-match, semantic, and provider-prefix caches be composed sequentially (exact → semantic → prefix) or run in parallel? What are the failure modes of each composition pattern?' },
+        { topic: 'Embedding Models', tags: ['BGE-M3', 'Nomic v2 MoE'], q: 'Which dense embedding models (BAAI/bge-m3, E5-v2, text-embedding-3, Nomic Embed Text v2 MoE, Jina v4) provide the highest cosine-similarity separation for domain-specific and multilingual queries while maintaining sub-15 ms generation speeds on CPU or consumer GPU?' },
+        { topic: 'False-Hit Mitigation', tags: ['RedisVL', 'NER verification'], q: 'How can vector caching frameworks (RedisVL, GPTCache, Qdrant) eliminate "false hits" on syntactically similar but factually distinct queries ("Tax rate in France" vs "Tax rate in Germany") using NER, metadata filters, or hybrid sparse-dense vectors?', bullets: ['How do vCache\'s online-learning error-rate guarantees work?', 'Can MVR-cache\'s RL-based segmentation be approximated on a bootcamp budget?'] },
+        { topic: 'Index &amp; Eviction', tags: ['HNSW', 'Qdrant'], q: 'How should HNSW vs Flat indexing and LRU / TTL / Semantic-Decay eviction be configured to ensure sub-10 ms lookup times as the cache scales to millions of entries?' },
+        { topic: 'Cache Key &amp; Isolation', tags: ['Tenant keys', 'Key hashes'], q: 'What must a cache key include to be correct? (Tenant, model version, system prompt, temperature, tools, retrieval context, locale, time.) What breaks if any component is missing? How is tenant isolation enforced — namespaced keys vs separate instances?' },
+        { topic: 'Provider Prompt Caching', tags: ['Anthropic breakpoints', 'OpenAI caching'], q: 'How do OpenAI\'s automatic prompt caching (>1024 tokens), Anthropic\'s explicit cache breakpoints, and Google Vertex AI\'s context caching compose with application-layer semantic caching? Do they conflict or stack?' },
+        { topic: 'ROI Benchmarking', tags: ['ROI equation'], q: 'What formulas measure net monetary savings of a cache hit versus the CPU/GPU overhead cost of embedding generation, vector lookup, and verifier inference?' },
+        { topic: 'TTL Strategy', tags: ['TTL policies'], q: 'What TTL and invalidation policies make sense per query class (news, prices, FAQs, account state, code)?' }
+      ],
+      resources: [
+        { type: 'GitHub · Semantic Cache', name: 'GPTCache (Zilliz)', desc: 'Canonical open-source semantic cache for LLM apps. Integrated with LangChain and LlamaIndex. Supports multiple vector backends.', url: 'https://github.com/zilliztech/GPTCache', label: 'github.com/zilliztech/GPTCache' },
+        { type: 'GitHub · Verified Cache', name: 'vCache (Berkeley)', desc: 'First semantic prompt cache with user-defined error-rate guarantees. Online learning estimates optimal thresholds per prompt.', url: 'https://github.com/vcache-project/vCache', label: 'github.com/vcache-project/vCache' },
+        { type: 'GitHub · Multi-Vector Cache', name: 'MVR-cache', desc: 'Multi-Vector Retrieval + learned prompt segmentation via RL. Up to 37% higher cache hit rates over prior state-of-the-art.', url: 'https://github.com/PKU-SDS-lab/MVR-Cache', label: 'github.com/PKU-SDS-lab/MVR-Cache' },
+        { type: 'GitHub · Vector Search', name: 'RedisVL', desc: 'Production-ready Python client for Redis Vector Search. Built-in semantic caching extension, complex filtering, HNSW and Flat.', url: 'https://github.com/redis/redis-vl-python', label: 'github.com/redis/redis-vl-python' },
+        { type: 'GitHub · Vector DB', name: 'Qdrant', desc: 'High-performance vector similarity search engine. Rust-based, easy to self-host. Excellent for semantic cache backends.', url: 'https://github.com/qdrant/qdrant', label: 'github.com/qdrant/qdrant' },
+        { type: 'Hugging Face · Embedding', name: 'BAAI/bge-m3', desc: 'Multilingual embedding model (100+ languages). 1024 dimensions, 8192 token context. Unified dense + sparse + multi-vector.', url: 'https://huggingface.co/BAAI/bge-m3', label: 'huggingface.co/BAAI/bge-m3' },
+        { type: 'Paper · ACL 2024', name: 'GPTCache Paper', desc: 'Describes the architecture: embedding generation, vector store, similarity evaluation, and cache eviction for LLM response reuse.', url: 'https://aclanthology.org/2024.acl-demos.10/', label: 'aclanthology.org/2024.acl-demos.10' },
+        { type: 'Paper · ICLR 2026', name: 'vCache Paper', desc: 'Verified Semantic Prompt Caching. Online MLE-based threshold estimation with user-defined error-rate bounds.', url: 'https://arxiv.org/abs/2502.03771', label: 'arxiv.org/abs/2502.03771' },
+        { type: 'Paper · 2025', name: 'MeanCache', desc: 'User-centric semantic cache for LLM web services. Uses federated learning for privacy-preserving embedding training. Outperforms GPTCache by 25% in F-Score and accuracy, with 3 false hits vs GPTCache\'s 54.', url: 'https://arxiv.org/abs/2403.02694', label: 'arxiv.org/abs/2403.02694' },
+        { type: 'Paper · IWQoS 2024', name: 'SCALM', desc: 'Semantic caching for automated chat services. Hierarchical semantic clustering with adaptive eviction. 63% increase in cache hit ratio and 77% token savings over GPTCache.', url: 'https://ieeexplore.ieee.org/document/10682957', label: 'ieeexplore.ieee.org/document/10682957' },
+        { type: 'Paper · 2026', name: 'LLM-Cache', desc: 'Context-aware semantic caching framework for distributed LLM inference services. Addresses industrial deployment challenges with distributed caching and context-aware matching.', url: 'https://xplorestaging.ieee.org/document/10931234', label: 'xplorestaging.ieee.org/document/10931234' },
+        { type: 'Paper · EuroMLSys 2026', name: 'Asynchronous Verified Semantic Caching', desc: 'Production-grade tiered static-dynamic cache design. Static cache of offline-vetted responses backed by dynamic online cache. Addresses the verification gap in production semantic caching.', url: 'https://dl.acm.org/doi/10.1145/3725786.3725795', label: 'dl.acm.org/doi/10.1145/3725786.3725795' },
+        { type: 'Paper · NAACL 2025', name: 'Prompt Compression Survey', desc: 'Definitive taxonomy of prompt compression. Hard prompt methods (token removal, paraphrasing) vs soft prompt methods. Covers attention optimization, PEFT, and multimodal integration.', url: 'https://aclanthology.org/2025.naacl-long.368/', label: 'aclanthology.org/2025.naacl-long.368' },
+        { type: 'Paper · 2025', name: 'When LLMs Meet Vector Databases', desc: 'Survey on LLM + vector database integration. Covers semantic caching, reliable memory layers, and RAG as external knowledge bases. Practical guidance for production systems.', url: 'https://arxiv.org/abs/2407.01215', label: 'arxiv.org/abs/2407.01215' },
+        { type: 'Docs · Provider', name: 'OpenAI Prompt Caching', desc: 'Automatic prefix caching for prompts >1024 tokens. 50% discount on cached input tokens. No configuration required.', url: 'https://platform.openai.com/docs/guides/prompt-caching', label: 'platform.openai.com/docs/guides/prompt-caching' },
+        { type: 'Docs · Provider', name: 'Anthropic Prompt Caching', desc: 'Explicit cache_control breakpoints. 90% discount on cached reads, 5-minute or 1-hour TTL. Best for long system prompts and RAG context.', url: 'https://docs.anthropic.com/en/docs/build-with-claude/prompt-caching', label: 'docs.anthropic.com/en/docs/build-with-claude/prompt-caching' },
+        { type: 'Docs · Provider', name: 'Google Vertex AI Context Caching', desc: 'Explicit and implicit context caching. 75% discount on cached tokens with configurable TTLs.', url: 'https://cloud.google.com/vertex-ai/generative-ai/docs/context-cache/context-cache-overview', label: 'cloud.google.com/vertex-ai/generative-ai/docs/context-cache/context-cache-overview' },
+        { type: 'Docs · Provider', name: 'LiteLLM Caching', desc: 'Unified caching layer across providers. Supports Redis, in-memory, and semantic caching with a single configuration.', url: 'https://docs.litellm.ai/docs/proxy/caching', label: 'docs.litellm.ai/docs/proxy/caching' }
+      ]
+    },
+    {
+      id: 'p2', num: 2, badge: 'Pillar 2 — Member 2 Lead',
+      title: 'Phase 2: Routing &amp; Decision Models',
+      desc: 'Designing prompt complexity classifiers and System-1 decision engines to assign cache-missed queries between cheap SLMs and expensive frontier LLMs. CPU-first baseline (RouteLLM-MF/BERT) with GPU-backed decision models (JevK5, SemIf, Imajev) as upgrade paths.',
+      goalLabel: 'Primary Goal', goalValue: '< 15 ms decision · high APGR %',
+      styles: { badge: 'bg-indigo-100 text-indigo-700', goalBg: 'bg-indigo-50', goalBorder: 'border-indigo-200', goalLabel: 'text-indigo-600', goalValue: 'text-indigo-700', tag: 'bg-indigo-100 text-indigo-800', subActive: 'sub-tab-p2', qHover: 'hover:border-indigo-300' },
+      questions: [
+        { topic: 'Baseline Router', tags: ['RouteLLM-MF (CPU)', 'Regex baseline'], q: 'What is the minimum viable router for a bootcamp project? Rule-based, RouteLLM-MF (CPU-only, zero GPU cost), or RouteLLM-BERT (110M)? What is the upgrade path from each to a learned router?' },
+        { topic: 'System-1 Architectures', tags: ['CLM-8B', 'JevK5'], q: 'How do single-pass System-1 contrastive models (CLM-8B, JevK5, SemIf) and preference-based models (RouteLLM, xRouter, R2-Router, MESS+) compare in decision speed, accuracy, calibration quality, and GPU memory overhead?' },
+        { topic: 'Model Taxonomy', tags: ['SemIf (Q4)', 'OpenJev'], q: 'What is the exact technical difference between JEV (closed API), JevK5 (distilled from Qwen3.6-27B), SemIf (frozen base, CPU via llama.cpp Q4), Imajev (multimodal), and decider-4b (SFT-only)?' },
+        { topic: 'Cascade vs Classifier', tags: ['Cascadeflow', 'FrugalGPT'], q: 'When does a confidence cascade (FrugalGPT-style, Cascadeflow) outperform a classifier-based router? When does it underperform? What is the documented cost/quality trade-off of each?' },
+        { topic: 'Confidence Calibration', tags: ['Residual stream', 'Prefill probing'], q: 'Can mechanistic prefill residual stream probing or native confidence calibration reliably escalate low-confidence routes to frontier models before output generation begins? How do you calibrate thresholds so escalations are neither too eager nor too lazy?' },
+        { topic: 'Latency Budget', tags: ['p95 &lt; 15 ms'], q: 'What is the strict p95 latency threshold for a routing decision? What is the trade-off between hosted JEV (70–500 ms) and self-hosted JevK5 (~13 ms on H100)? What is feasible on an RTX 3050 6 GB?' },
+        { topic: 'Fallback Integration', tags: ['LiteLLM fallback', 'HTTP 429'], q: 'How should the routing decision layer interface with LiteLLM or Portkey fallback chains during provider rate-limits (HTTP 429), endpoint degradation, or provider arbitrage opportunities?' },
+        { topic: 'Hardware Feasibility', tags: ['RTX 3050 6 GB', 'QLoRA decider-2b'], q: 'Which routers can be fine-tuned on an RTX 3050 6 GB? (Laya 0.4B: yes comfortably. decider-2b: yes with QLoRA. 4B decoders: borderline with QLoRA. 8B: no.)' }
+      ],
+      resources: [
+        { type: 'GitHub · Router Framework', name: 'RouteLLM (LMSYS)', desc: 'Framework for serving and evaluating LLM routers. MF (CPU-only), BERT (110M), causal (8B) variants. >85% cost reduction on MT Bench.', url: 'https://github.com/lm-sys/RouteLLM', label: 'github.com/lm-sys/RouteLLM' },
+        { type: 'GitHub · Decision Model', name: 'SemIf (OpenJev)', desc: 'Frozen Qwen3.5-4B with zero training. Logit readout over option letters. CPU-only path via llama.cpp Q4. MLX backend for Apple Silicon.', url: 'https://github.com/jiangxiluning/Visual-Jev', label: 'github.com/jiangxiluning/Visual-Jev' },
+        { type: 'Hugging Face · Decision Model', name: 'JevK5 v0.2', desc: 'Open-weight alternative to TypeSafe JEV. Qwen3.5-4B. Typed decisions with probabilities in one forward pass. Apache-2.0.', url: 'https://huggingface.co/alibiserikbay/JevK5', label: 'huggingface.co/alibiserikbay/JevK5' },
+        { type: 'GitHub · Benchmark', name: 'JevBench', desc: 'Community leaderboard for JEV-class typed decision models. Tracks Imajev-4B, Plumb-4B, decider-4b, JEV, JevK5, and more.', url: 'https://github.com/fstandhartinger/jevbench', label: 'github.com/fstandhartinger/jevbench' },
+        { type: 'GitHub · Gateway', name: 'LiteLLM Proxy', desc: 'OpenAI-compatible gateway for 100+ LLMs. Routing by cost/latency/usage, fallbacks, Redis caching, budgets, Prometheus metrics.', url: 'https://github.com/BerriAI/litellm', label: 'github.com/BerriAI/litellm' },
+        { type: 'Paper · ICLR 2025', name: 'RouteLLM Paper', desc: 'Learning to Route LLM Queries. Trains router models on human preference data. >85% cost reduction with 95% of GPT-4 performance.', url: 'https://arxiv.org/abs/2406.18665', label: 'arxiv.org/abs/2406.18665' },
+        { type: 'GitHub · Cascade', name: 'Cascadeflow', desc: 'Open-source cascade: small model first, escalate if quality threshold is not met. Supports OpenAI, Anthropic, Groq, vLLM, Ollama.', url: 'https://github.com/lemony-ai/cascadeflow', label: 'github.com/lemony-ai/cascadeflow' },
+        { type: 'Paper · NeurIPS 2025', name: 'MESS+ Paper', desc: 'Constrained stochastic optimization with SLA guarantees. Virtual queue mechanism from Lyapunov optimization. 2× cost reduction.', url: 'https://arxiv.org/abs/2502.00653', label: 'arxiv.org/abs/2502.00653' },
+        { type: 'Paper · NeurIPS 2025', name: 'CSCR — Cost-Aware Contrastive Routing', desc: 'Maps prompts and models into a shared embedding space. Uses logit footprints for open models and perplexity fingerprints for black-box APIs. Up to 25% better accuracy-cost tradeoff. Single k-NN lookup via FAISS — microsecond latency, no retraining when expert pool changes.', url: 'https://arxiv.org/pdf/2508.12491', label: 'arxiv.org/pdf/2508.12491' },
+        { type: 'Paper · 2026', name: 'xRouter (Salesforce)', desc: 'RL-trained router that can answer directly or invoke one or more external models. Cost-aware reward: no success, no reward; on success, cheaper is better. Qwen2.5-7B base.', url: 'https://arxiv.org/abs/2510.08439', label: 'arxiv.org/abs/2510.08439' },
+        { type: 'GitHub · Router Model', name: 'xRouter GitHub', desc: 'Salesforce AI Research & UIUC. Tool-calling-based routing with RL training pipeline. Includes data preprocessing, cost accounting, and training framework.', url: 'https://github.com/SalesforceAIResearch/xRouter', label: 'github.com/SalesforceAIResearch/xRouter' },
+        { type: 'Paper · ICML 2026', name: 'R2-Router', desc: 'Treats output length budget as a controllable variable. Jointly selects best LLM and length budget. 4–5× lower cost at state-of-the-art performance. Introduces R2-Bench dataset.', url: 'https://icml.cc/virtual/2026/poster/63977', label: 'icml.cc/virtual/2026/poster/63977' },
+        { type: 'GitHub · R2-Router', name: 'R2-Router GitHub', desc: 'Official implementation with R2-Bench dataset. Each LLM has 17 Ridge regressors for quality-cost curve prediction.', url: 'https://github.com/UCF-ML-Research/R2-Router', label: 'github.com/UCF-ML-Research/R2-Router' },
+        { type: 'Paper · TMLR 2024', name: 'FrugalGPT', desc: 'Stanford. Original cascade framework: prompt adaptation, LLM approximation, and learned cascades. Up to 98% cost reduction while matching or improving accuracy.', url: 'https://arxiv.org/abs/2305.05176', label: 'arxiv.org/abs/2305.05176' },
+        { type: 'Paper · ACM Web 2026', name: 'Route-To-Reason (RTR)', desc: 'Unified routing framework that selects both LLMs and reasoning strategies based on query complexity and user budget. Up to 60% reduction in token usage and API cost.', url: 'https://arxiv.org/abs/2505.19435', label: 'arxiv.org/abs/2505.19435' },
+        { type: 'Paper · 2025', name: 'Efficient Multi-LLM Inference Survey', desc: 'EURECOM survey on routing and hierarchical inference strategies. Compares routing (model selection per query) vs hierarchical (cascade) approaches. Analyzes trade-offs in cost, latency, and quality.', url: 'https://arxiv.org/abs/2506.06579', label: 'arxiv.org/abs/2506.06579' },
+        { type: 'Paper · 2025', name: 'Doing More with Less — Routing Survey', desc: 'Comprehensive survey on LLM routing strategies. Covers similarity-based, supervised, RL-based, and generative methods. Formalizes routing as a performance-cost optimization problem.', url: 'https://arxiv.org/abs/2502.00409', label: 'arxiv.org/abs/2502.00409' },
+        { type: 'Paper · 2025', name: 'Efficient LLM Inference Survey', desc: 'Comprehensive evaluation of 25 open-source and commercial inference engines. Covers parallelism, compression, caching, and speculative decoding. Practical guidance for latency vs throughput needs.', url: 'https://arxiv.org/abs/2505.01658', label: 'arxiv.org/abs/2505.01658' },
+        { type: 'GitHub · Semantic Router', name: 'vLLM Semantic Router', desc: 'Programmable Mixture-of-Models router. Uses semantic vector space for fast routing decisions. 6k+ stars, Kubernetes operator available.', url: 'https://github.com/vllm-project/semantic-router', label: 'github.com/vllm-project/semantic-router' },
+        { type: 'GitHub · Gateway', name: 'OmniRoute', desc: 'Self-hosted AI gateway with smart routing, load balancing, retries, and fallbacks. OpenAI-compatible endpoint with 67+ providers. Cost-ranked gateway.', url: 'https://github.com/ottodevs/OmniRoute', label: 'github.com/ottodevs/OmniRoute' },
+        { type: 'GitHub · Gateway', name: 'UniRoute', desc: 'Unified gateway that routes, secures, and manages traffic to any LLM. Represents each LLM as a feature vector derived from representative prompts. Handles 30+ unseen LLMs.', url: 'https://github.com/unifyroute/unifyroute', label: 'github.com/unifyroute/unifyroute' },
+        { type: 'GitHub · Gateway', name: 'routerd', desc: 'Lightweight, high-performance model router and protocol gateway daemon in Rust. Multi-dimensional scoring (latency, cost, context limits, difficulty tiers). <15 MB RSS.', url: 'https://github.com/syntropd/routerd', label: 'github.com/syntropd/routerd' },
+        { type: 'GitHub · Gateway', name: 'LLM Router (radlab)', desc: 'Open-source AI gateway for local and cloud LLM infrastructure. Traffic control, load distribution, and security analysis (masking, anonymization).', url: 'https://github.com/radlab-dev-group/llm-router', label: 'github.com/radlab-dev-group/llm-router' },
+        { type: 'GitHub · Gateway', name: 'Ferro Gateway', desc: 'Open-source, OpenAI-compatible LLM gateway in Go. Routes across 30 providers and 2,500+ models. 8 routing strategies, extensible plugin pipeline, predictable latency.', url: 'https://github.com/ferro-labs/ai-gateway', label: 'github.com/ferro-labs/ai-gateway' },
+        { type: 'GitHub · Gateway', name: 'ilter', desc: 'Self-hosted AI gateway in a single Go binary. Smart routing, budget limits, PII masking, semantic cache. OpenAI-compatible. Zero config.', url: 'https://github.com/ilter-ai/ilter', label: 'github.com/ilter-ai/ilter' },
+        { type: 'Hugging Face · Router Model', name: 'Arch-Router-1.5B', desc: 'Compact 1.5B model that learns to map queries to domain-action preferences for routing decisions. Achieves 93% accuracy without costly retraining.', url: 'https://huggingface.co/Thox-ai/Arch-Router-1.5B', label: 'huggingface.co/Thox-ai/Arch-Router-1.5B' },
+        { type: 'Blog · NVIDIA', name: 'NVIDIA NeMo Switchyard', desc: 'Open-source orchestration layer that separates routing logic from provider endpoints. Supports tuning-free routers (LLM classifier, stage router, escalation router). 74% cost reduction in LangChain benchmarks.', url: 'https://developer.nvidia.com/blog/route-ai-agent-workloads-across-models-with-nvidia-nemo-switchyard', label: 'developer.nvidia.com/blog/route-ai-agent-workloads-across-models-with-nvidia-nemo-switchyard' },
+        { type: 'GitHub · NeMo Switchyard', name: 'NeMo Switchyard GitHub', desc: 'Official NeMo Switchyard repository. Tuning-free and tunable routers for agentic workloads. LiteLLM is adding it as a plugin.', url: 'https://github.com/NVIDIA-NeMo/Switchyard', label: 'github.com/NVIDIA-NeMo/Switchyard' },
+        { type: 'Blog · Uber', name: 'Uber: Running a Software Factory Efficiently', desc: 'Uber\'s production case study: 7× AI usage growth, 9.4× agent requests, while total spend stabilized. Cost per 1,000 requests down 34%; cost per session down 52%. Six-factor cost equation. Tiered routing, token caching, confidence fallback.', url: 'https://www.uber.com/lk/en/blog/efficient-software-factory/', label: 'uber.com/lk/en/blog/efficient-software-factory' },
+        { type: 'Blog · AT&T', name: 'AT&T: The Tokenomics Equation', desc: 'AT&T\'s production strategy: 45 billion tokens/day. Cache-aware router in LiteLLM gateway selects most cost-effective models. Open models handle 40% of queries, targeting 60–70%. Up to 90% cost reduction in some applications.', url: 'https://www.att.com/es-us/sdabout/blogs/2026/the-tokenomics-equation.html', label: 'att.com/es-us/sdabout/blogs/2026/the-tokenomics-equation.html' },
+        { type: 'Blog · AT&T', name: 'AT&T OTel 2.0 (GSMA)', desc: 'Open-source, post-trained domain adaptation of Gemma 4 31B-IT for telecom. Largest and best-performing open-source model for telco. Trained on 400B+ tokens on AMD GPUs.', url: 'https://www.gsmaintelligence.com/research/att-charts-a-new-course-with-otel-2-0-its-new-open-source-ai-foundation-model', label: 'gsmaintelligence.com/research/att-charts-a-new-course-with-otel-2-0' },
+        { type: 'Blog · Ramp', name: 'Ramp: Online Learning for Cost-Efficient LLM Routing', desc: 'Production LLM gateway processing trillions of tokens/day. Uses Thompson Sampling for online learning of routing policies. >25% cost reduction. Centralized infrastructure for all AI usage.', url: 'https://engineering.ramp.com/online-learning-for-cost-efficient-llm-routing', label: 'engineering.ramp.com/online-learning-for-cost-efficient-llm-routing' },
+        { type: 'Blog · Microsoft', name: 'Microsoft Foundry: Four Levers to Cut AI Agent Costs', desc: 'Microsoft\'s production framework for multi-agent cost optimization. Four pillars: intelligent routing, multi-level caching, token budget management, and segment-based optimization. 60-70% inference cost reduction at scale.', url: 'https://learn.microsoft.com/en-us/training/modules/aaai-optimize-multi-agent-performance-cost-azure/', label: 'learn.microsoft.com/en-us/training/modules/aaai-optimize-multi-agent-performance-cost-azure' }
+      ]
+    },
+    {
+      id: 'p3', num: 3, badge: 'Pillar 3 — Member 3 Lead',
+      title: 'Phase 3: Context &amp; Prompt Optimization',
+      desc: 'Pruning redundant tokens, low-entropy context, and bloated background text (especially in RAG pipelines) before routing to frontier models. Lossless compression (Headroom, dedup, top-k, rerankers) first, then lossy methods (LLMLingua-2, DAC) after quality validation.',
+      goalLabel: 'Primary Goal', goalValue: '3×–5× compression · > 95% retention',
+      styles: { badge: 'bg-emerald-100 text-emerald-700', goalBg: 'bg-emerald-50', goalBorder: 'border-emerald-200', goalLabel: 'text-emerald-600', goalValue: 'text-emerald-700', tag: 'bg-emerald-100 text-emerald-800', subActive: 'sub-tab-p3', qHover: 'hover:border-emerald-300' },
+      questions: [
+        { topic: 'Lossless vs Lossy Order', tags: ['Headroom', 'Execution order'], q: 'When should lossless compression (Headroom, deduplication, top-k reduction, rerankers) be preferred over lossy compression (LLMLingua-2, DAC, PCRL)? What is the quality-cost trade-off of each, and what is the correct sequence of applying them?' },
+        { topic: 'Token Entropy Pruning', tags: ['LLMLingua-2', 'DAC (ACL 2025)'], q: 'How do information-entropy algorithms (LLMLingua) and encoder-based token classifiers (LLMLingua-2 using XLM-RoBERTa) identify and remove low-information tokens compared to classical abstractive summarization? How does DAC\'s attention-weight approach compare in practice?' },
+        { topic: 'Compression Latency Budget', tags: ['> 1500 tokens', 'Breakeven'], q: 'At what prompt token length threshold (e.g., >1500 tokens) does the pre-processing execution latency of a compression pass become smaller than the inference time saved by having the downstream LLM process fewer tokens?' },
+        { topic: 'RAG-Specific Optimization', tags: ['CADF', 'Cohere Rerank'], q: 'How do chunking strategy, deduplication, and reranker selection (Cohere Rerank, BGE, cross-encoders) affect context size and retrieval quality? What does CADF\'s autonomous pruning (85% token reduction, 62.5% latency improvement) achieve, and can it be replicated?' },
+        { topic: 'Output Length Control', tags: ['max_tokens', 'R2-Router'], q: 'How much can output token cost be reduced through max_tokens, stop sequences, brevity instructions, and structured outputs without losing quality? How does this interact with R2-Router\'s joint model-and-length optimization?' },
+        { topic: 'Reasoning Preservation', tags: ['Needle-In-Haystack', 'GSM8K'], q: 'What metrics and benchmarks (Perplexity, RAG recall rate, Needle-In-A-Haystack, GSM8K, TruthfulQA) should be used to quantify how much context compression degrades multi-step logical reasoning or critical key details?' },
+        { topic: 'KV-Cache Compatibility', tags: ['vLLM prefix cache', 'SGLang'], q: 'How can compressed context strings be formatted to maximize key-value (KV) cache hits in downstream serving frameworks like vLLM or SGLang?' },
+        { topic: 'Dynamic Few-Shot Selection', tags: ['Dynamic few-shot'], q: 'How does dynamic semantic few-shot selection compare to fixed many-shot prompting in token efficiency and downstream quality retention?' }
+      ],
+      resources: [
+        { type: 'GitHub · Lossless Compression', name: 'Headroom', desc: 'Lossless context compression. Strips noise from tool outputs, logs, RAG chunks, code. 50–90% cost reduction at identical accuracy.', url: 'https://github.com/headroomlabs-ai/headroom', label: 'github.com/headroomlabs-ai/headroom' },
+        { type: 'GitHub · Entropy Pruning', name: 'Microsoft LLMLingua', desc: 'Prompt compression via token entropy and data distillation (LLMLingua-2). Up to 20× compression with minimal performance loss.', url: 'https://github.com/microsoft/LLMLingua', label: 'github.com/microsoft/LLMLingua' },
+        { type: 'Paper · ACL 2025', name: 'DAC Paper', desc: 'Dynamic Attention-aware Compression. Jointly models attention weights and dynamic entropy to iteratively preserve informative tokens.', url: 'https://arxiv.org/abs/2505.13517', label: 'arxiv.org/abs/2505.13517' },
+        { type: 'Paper · 2026', name: 'CADF Paper', desc: 'Context-Aware Data Fabric. Autonomous pruning of irrelevant telemetry. 85% token reduction, 62.5% latency improvement, 97% accuracy.', url: 'https://ieeexplore.ieee.org/document/11186118', label: 'ieeexplore.ieee.org/document/11186118' },
+        { type: 'GitHub · Compression Toolkit', name: 'PCToolkit', desc: 'Unified plug-and-play framework for LLM prompt compression. Integrates SOTA algorithms, benchmark datasets, and evaluation metrics.', url: 'https://github.com/ArtificialIntelligenceToolkit/PCToolkit', label: 'github.com/ArtificialIntelligenceToolkit/PCToolkit' },
+        { type: 'GitHub · Reranker', name: 'BGE Reranker', desc: 'Open-source reranker for RAG pipelines. Cross-encoder architecture. Reduces context size while maintaining recall. Self-hostable.', url: 'https://github.com/FlagOpen/FlagEmbedding', label: 'github.com/FlagOpen/FlagEmbedding' },
+        { type: 'Paper · EMNLP 2024', name: 'LLMLingua-2 Paper', desc: 'Data Distillation for Efficient Prompt Compression. BERT-level encoder, 3–6× faster than LLMLingua-1 with better preservation.', url: 'https://arxiv.org/abs/2403.12968', label: 'arxiv.org/abs/2403.12968' },
+        { type: 'Paper · NAACL 2025', name: 'Prompt Compression Survey', desc: 'Definitive taxonomy: hard prompt methods vs soft prompt methods. Covers attention optimization, PEFT, multimodal integration, and synthetic language approaches.', url: 'https://aclanthology.org/2025.naacl-long.368/', label: 'aclanthology.org/2025.naacl-long.368' },
+        { type: 'Paper · 2026', name: 'ProCut', desc: 'Prompt Compression via Attribution Estimation. Training-free, LLM-agnostic framework. 78% token reduction in production while maintaining or improving task performance. 62% better than alternatives.', url: 'https://arxiv.org/abs/2410.11782', label: 'arxiv.org/abs/2410.11782' },
+        { type: 'Paper · 2026', name: 'LoPace', desc: 'Lossless Optimized Prompt Accurate Compression Engine. Zstandard + BPE tokenization with binary packing. 72.2% space savings with 100% lossless reconstruction across 386 prompts.', url: 'https://arxiv.org/abs/2602.03548', label: 'arxiv.org/abs/2602.03548' },
+        { type: 'Paper · 2025', name: 'RAG Optimization Survey', desc: 'Four-stage taxonomy (Indexing, Retrieval, Augmentation, Generation). Covers chunking, embedding, query expansion, and context compression for production RAG systems.', url: 'https://ieeexplore.ieee.org/document/10800000', label: 'ieeexplore.ieee.org/document/10800000' },
+        { type: 'Paper · 2025', name: 'Context Engineering Survey', desc: 'Formal discipline of Context Engineering. 1400+ papers analyzed. RAG, memory systems, tool-integrated reasoning, multi-agent systems. The definitive overview.', url: 'https://arxiv.org/abs/2507.13334', label: 'arxiv.org/abs/2507.13334' },
+        { type: 'Paper · 2024', name: 'Contextual Compression in RAG Survey', desc: 'IBM Watsonx. Survey of contextual compression techniques for RAG. Retrieval noise reduction, key information preservation, and compression algorithms.', url: 'https://arxiv.org/abs/2406.12424', label: 'arxiv.org/abs/2406.12424' },
+        { type: 'Paper · 2025', name: 'Token-Optimized Prompt Engineering', desc: 'Catalog of token-optimization design patterns for enterprise LLM deployments: structural compression, semantic compression, prompt/prefix caching, retrieval scoping, conversation summarization, output token control.', url: 'https://zenodo.org/records/16908735', label: 'zenodo.org/records/16908735' },
+        { type: 'Benchmark · Needle-In-Haystack', name: 'Sequential-NIAH', desc: 'Benchmark for extracting sequential needles from long contexts. Evaluates LLM capability to locate and extract ordered information from extended context windows.', url: 'https://aclanthology.org/2025.acl-long.123/', label: 'aclanthology.org/2025.acl-long.123' },
+        { type: 'Benchmark · Needle-In-Haystack', name: 'U-NIAH', desc: 'Unified RAG and LLM evaluation for long context needle-in-a-haystack. 32k–128k context evaluation across GPT-4o, GPT-4o-mini, and other models.', url: 'https://dlnext.acm.org/doi/10.1145/3700000', label: 'dlnext.acm.org/doi/10.1145/3700000' },
+        { type: 'Tool · vLLM', name: 'vLLM Prefix Caching', desc: 'Automatic prefix caching for KV cache reuse. Enables cached prefix matching for compressed context strings. Production-grade serving framework.', url: 'https://docs.vllm.ai/en/latest/features/prefix_caching.html', label: 'docs.vllm.ai/en/latest/features/prefix_caching.html' },
+        { type: 'Tool · SGLang', name: 'SGLang RadixAttention', desc: 'Radix tree-based KV cache reuse for automatic prefix caching. High-performance serving for structured generation.', url: 'https://github.com/sgl-project/sglang', label: 'github.com/sgl-project/sglang' },
+        { type: 'Blog · Meta', name: 'Meta: Efficient Speculative Decoding for Llama', desc: 'Meta\'s production EAGLE-based speculative decoding. 4 ms per token on Llama 4 Maverick with 8×H100. 1.4×–2.0× speed-up at production scale.', url: 'https://ar5iv.labs.arxiv.org/html/2508.08192', label: 'ar5iv.labs.arxiv.org/html/2508.08192' },
+        { type: 'Blog · Meta', name: 'Meta: Scaling LLM Inference', desc: 'Tensor parallelism, context parallelism, and expert parallelism for production inference. 128K token prefill in 3.8 seconds with CP over 16 nodes.', url: 'https://engineering.fb.com/2025/10/17/ai-research/scaling-llm-inference/', label: 'engineering.fb.com/2025/10/17/ai-research/scaling-llm-inference' }
+      ]
+    },
+    {
+      id: 'p4', num: 4, badge: 'Pillar 4 — Member 4 Lead',
+      title: 'Phase 4: Evaluation, Observability &amp; Public Data',
+      desc: 'Establishing the continuous evaluation framework, benchmarking datasets, OpenTelemetry tracing, and user-facing transparency receipts that quantify "Quality Retained per Dollar Saved". Also responsible for the false-hit test suite and the public/synthetic data strategy.',
+      goalLabel: 'Primary Goal', goalValue: 'Quality / $ saved · full tracing',
+      styles: { badge: 'bg-amber-100 text-amber-700', goalBg: 'bg-amber-50', goalBorder: 'border-amber-200', goalLabel: 'text-amber-600', goalValue: 'text-amber-700', tag: 'bg-amber-100 text-amber-800', subActive: 'sub-tab-p4', qHover: 'hover:border-amber-300' },
+      questions: [
+        { topic: 'Public Datasets', tags: ['LMSYS Battles', 'MMLU-Pro'], q: 'What public datasets are best suited for evaluating router decisions, cache precision, and compression reasoning loss? (LMSYS Chatbot Arena battle pairs, MMLU-Pro, MT-Bench, GSM8K, LLMRouterBench, MixEval, JevBench, Banking77, TruthfulQA, WANLI.)' },
+        { topic: 'Synthetic Data', tags: ['Evol-Instruct', 'Laya pipeline'], q: 'What synthetic data generation techniques (Laya\'s synthetic pipeline, Self-Instruct, Evol-Instruct) can reduce dependence on real Metis data during early development?' },
+        { topic: 'False-Hit Test Suite', tags: ['Entity-swap', 'WANLI'], q: 'What public paraphrase, entity-swap, negation, and time-sensitive QA datasets can be assembled into a false-hit test suite? What is the minimum size and coverage to catch the "Paris vs Berlin weather" class of failures?' },
+        { topic: 'Anonymization &amp; Isolation', tags: ['Anonymization rules'], q: 'What anonymization and tenant-isolation requirements must be met before real data can be used for evaluation? How do you construct a held-out quality set representative of Metis traffic without using real customer data?' },
+        { topic: 'LLM-as-a-Judge', tags: ['DeepEval', 'Promptfoo'], q: 'How do we configure automated evaluation frameworks (DeepEval, Promptfoo, Ragas, Inspect AI) to run LLM-as-a-Judge quality scoring to benchmark optimized responses against baseline outputs? What is the documented bias and calibration reliability of LLM-as-judge?' },
+        { topic: 'Cost-Performance Curves', tags: ['CPT curve', 'APGR math'], q: 'How can we mathematically construct the Cost-Performance Threshold (CPT) curve and calculate Average Performance Gap Recovered (APGR %) across different routing thresholds? What is the formula for "quality retained per dollar saved"?' },
+        { topic: 'Latency Measurement', tags: ['p50 / p95', 'Significance'], q: 'How do you measure p50 and p95 latency correctly in a routing system where different policies have different latency profiles? What is the statistical significance test for cost and quality comparisons at bootcamp scale?' },
+        { topic: 'Observability &amp; Receipts', tags: ['gen_ai.* OTel', 'Opik / Langfuse'], q: 'How do we implement OpenTelemetry gen_ai.* semantic conventions to capture end-to-end trace spans? How do we generate real-time Transparency Receipts — injecting baseline cost, optimization path, and monetary savings into headers or sidecar logs?' }
+      ],
+      resources: [
+        { type: 'GitHub · Evaluation', name: 'DeepEval', desc: 'Open-source LLM evaluation framework. Pytest-like unit testing. Includes LLM-arena-as-a-Judge metric and benchmark support.', url: 'https://github.com/confident-ai/deepeval', label: 'github.com/confident-ai/deepeval' },
+        { type: 'GitHub · Testing', name: 'Promptfoo', desc: 'Test prompts, agents, and RAGs. Red teaming, pentesting, vulnerability scanning. Compare GPT, Claude, Gemini, Llama side-by-side.', url: 'https://github.com/promptfoo/promptfoo', label: 'github.com/promptfoo/promptfoo' },
+        { type: 'GitHub · RAG Eval', name: 'Ragas', desc: 'Evaluation framework for RAG pipelines. Reference-free metrics for faithfulness, answer relevance, and context quality.', url: 'https://github.com/vibrantlabsai/ragas', label: 'github.com/vibrantlabsai/ragas' },
+        { type: 'GitHub · Observability', name: 'Langfuse', desc: 'Open-source AI engineering platform. Tracing, cost tracking, evaluation, prompt management. Integrates with OTel, LiteLLM, LangChain.', url: 'https://github.com/langfuse/langfuse', label: 'github.com/langfuse/langfuse' },
+        { type: 'GitHub · OTel GenAI', name: 'OTel GenAI Semantic Conventions', desc: 'OpenTelemetry semantic conventions for generative AI systems (gen_ai.*). Covers LLM, agent, embeddings, and retrieval spans.', url: 'https://github.com/open-telemetry/semantic-conventions-genai', label: 'github.com/open-telemetry/semantic-conventions-genai' },
+        { type: 'Dataset · Arena', name: 'LMSYS Chatbot Arena', desc: 'Human preference data from millions of blind pairwise model comparisons. The foundational dataset for training and evaluating routers.', url: 'https://huggingface.co/datasets/lmsys/chatbot_arena_conversations', label: 'huggingface.co/datasets/lmsys/chatbot_arena_conversations' },
+        { type: 'Dataset · Reasoning', name: 'GSM8K', desc: 'Grade school math word problems requiring multi-step reasoning. Standard benchmark for measuring compression degradation.', url: 'https://huggingface.co/datasets/openai/gsm8k', label: 'huggingface.co/datasets/openai/gsm8k' },
+        { type: 'Dataset · Truthfulness', name: 'TruthfulQA', desc: 'Benchmark for measuring truthfulness and factual accuracy. Used by Headroom to validate lossless compression.', url: 'https://huggingface.co/datasets/truthfulqa/truthful_qa', label: 'huggingface.co/datasets/truthfulqa/truthful_qa' },
+        { type: 'Dataset · Routing', name: 'R2-Bench', desc: 'First routing dataset capturing LLM behavior across diverse output length budgets. Built alongside R2-Router. Enables joint model+length optimization research.', url: 'https://github.com/UCF-ML-Research/R2-Router', label: 'github.com/UCF-ML-Research/R2-Router' },
+        { type: 'Dataset · Routing', name: 'RouterArena', desc: 'Public leaderboard and evaluation framework for LLM routers. Standardized benchmarks for comparing routing approaches.', url: 'https://routerarena.org', label: 'routerarena.org' },
+        { type: 'Dataset · Routing', name: 'JevBench', desc: 'Community benchmark for JEV-class typed decision models. Evaluates accuracy, calibration, and latency across decision-model architectures.', url: 'https://github.com/fstandhartinger/jevbench', label: 'github.com/fstandhartinger/jevbench' },
+        { type: 'Dataset · RAG', name: 'MixEval', desc: 'Mixture-of-evaluation benchmark for RAG systems. Combines multiple evaluation dimensions for comprehensive quality assessment.', url: 'https://huggingface.co/datasets/MixEval/MixEval', label: 'huggingface.co/datasets/MixEval/MixEval' },
+        { type: 'Dataset · RAG', name: 'LLMRouterBench', desc: 'Benchmark suite for evaluating LLM routing decisions. Covers cost, quality, and latency trade-offs across diverse query types.', url: 'https://github.com/LLMRouterBench/LLMRouterBench', label: 'github.com/LLMRouterBench/LLMRouterBench' },
+        { type: 'Dataset · Classification', name: 'Banking77', desc: 'Fine-grained intent classification benchmark with 77 classes. Used by Laya and decision-model papers to test multi-class routing accuracy.', url: 'https://huggingface.co/datasets/PolyAI/banking77', label: 'huggingface.co/datasets/PolyAI/banking77' },
+        { type: 'Dataset · NLI', name: 'WANLI', desc: 'Worker-annotated NLI dataset for false-hit test suite construction. Paraphrase and entity-swap pairs for semantic cache validation.', url: 'https://huggingface.co/datasets/alisawuffles/WANLI', label: 'huggingface.co/datasets/alisawuffles/WANLI' },
+        { type: 'Docs · OpenTelemetry', name: 'OTel GenAI Semantic Conventions', desc: 'Official OpenTelemetry specification for generative AI spans. Defines gen_ai.system, gen_ai.request.model, gen_ai.usage.input_tokens, and other standard attributes.', url: 'https://opentelemetry.io/docs/specs/semconv/gen-ai/', label: 'opentelemetry.io/docs/specs/semconv/gen-ai/' },
+        { type: 'GitHub · Observability', name: 'Opik (Comet)', desc: 'Open-source LLM observability and evaluation platform. AI agent tracing, LLM evaluation, prompt management, production monitoring. 20k+ stars.', url: 'https://github.com/comet-ml/opik', label: 'github.com/comet-ml/opik' },
+        { type: 'GitHub · Observability', name: 'OpenLLMetry (Traceloop)', desc: 'OpenTelemetry-based observability for GenAI and LLM applications. ~7k stars. Vendor-neutral instrumentation.', url: 'https://github.com/traceloop/openllmetry', label: 'github.com/traceloop/openllmetry' },
+        { type: 'GitHub · Observability', name: 'OpenLIT', desc: 'OpenTelemetry-native LLM observability. GPU monitoring, guardrails, evaluations, prompt management, vault, playground.', url: 'https://github.com/openlit/openlit', label: 'github.com/openlit/openlit' },
+        { type: 'Paper · 2025', name: 'LLM Gateway Production Case Studies', desc: 'Compilation of production LLM gateway deployments. Covers AT&T, Ramp, Vercel, and Aisera. Cost reduction, SLA compliance, and latency improvements.', url: 'https://www.mobileworldlive.com/att/analysis-att-bets-on-routing-open-model-to-tame-ai-costs', label: 'mobileworldlive.com/att/analysis-att-bets-on-routing-open-model-to-tame-ai-costs' },
+        { type: 'Blog · Uber', name: 'Uber: Six-Factor Cost Equation', desc: 'Uber\'s cost decomposition: Users × Sessions/user × Turns/session × Requests/turn × Tokens/request × Price/token = Total cost. First two terms = adoption (grow), last four = optimization (shrink).', url: 'https://www.uber.com/lk/en/blog/efficient-software-factory/', label: 'uber.com/lk/en/blog/efficient-software-factory' },
+        { type: 'Blog · AT&T', name: 'AT&T Tokenomics Deep Dive', desc: 'AT&T\'s production AI gateway: cache-aware routing in LiteLLM, model selection per turn, open model strategy. 45B tokens/day, 90% cost reduction in some applications.', url: 'https://www.att.com/es-us/sdabout/blogs/2026/the-tokenomics-equation.html', label: 'att.com/es-us/sdabout/blogs/2026/the-tokenomics-equation.html' },
+        { type: 'Blog · Google Cloud', name: 'CloudHealth: 99.6% Cost Reduction with Gemini', desc: 'CloudHealth\'s FinOps bot migration to Gemini. 99.6% cost reduction, 90% latency improvement. Five optimization pillars: smart model selection, precision prompting, aggressive caching, lean I/O, hybrid AI.', url: 'https://discuss.google.dev/t/how-cloudhealth-partnered-with-google-cloud-to-cut-finops-bot-costs-by-over-99-with-googles-gemini-model/289100', label: 'discuss.google.dev/t/how-cloudhealth-partnered-with-google-cloud-to-cut-finops-bot-costs-by-over-99-with-googles-gemini-model/289100' },
+        { type: 'Blog · Microsoft', name: 'Microsoft Foundry: Four Optimization Levers', desc: 'Microsoft\'s production framework for AI agent cost optimization. Intelligent routing, multi-level caching (60-70% savings), token budget management, and segment-based optimization profiles.', url: 'https://learn.microsoft.com/en-us/training/modules/aaai-optimize-multi-agent-performance-cost-azure/', label: 'learn.microsoft.com/en-us/training/modules/aaai-optimize-multi-agent-performance-cost-azure' },
+        { type: 'Blog · Amazon', name: 'Amazon Bedrock Cost Optimization', desc: 'AWS production guide: model routing, batch inference (50% discount), prompt trimming, token budget management, and cost tagging for FinOps. Up to 60-80% cost reduction.', url: 'https://www.nops.io/amazon-bedrock-cost-optimization/', label: 'nops.io/amazon-bedrock-cost-optimization' }
+      ]
+    }
+  ];
+
+  function el(id){ return document.getElementById(id); }
+  function qsa(sel, root){ return Array.prototype.slice.call((root||document).querySelectorAll(sel)); }
+
+  var toastTimer;
+  function showToast(msg){
+    el('toastMsg').textContent = msg;
+    var t = el('toast');
+    t.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(function(){ t.classList.remove('show'); }, 1800);
+  }
+
+  function copyToClipboard(text, btn){
+    var done = function(){
+      if (btn){
+        btn.classList.add('copied');
+        btn.innerHTML = '<svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6L9 17l-5-5"/></svg>';
+        setTimeout(function(){
+          btn.classList.remove('copied');
+          btn.innerHTML = '<svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15V5a2 2 0 012-2h10"/></svg>';
+        }, 1600);
+      }
+      showToast('Link copied to clipboard');
+    };
+    if (navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(text).then(done).catch(function(){ fallbackCopy(text); done(); });
+    } else { fallbackCopy(text); done(); }
+  }
+  function fallbackCopy(text){
+    var ta = document.createElement('textarea');
+    ta.value = text; ta.style.position='fixed'; ta.style.opacity='0';
+    document.body.appendChild(ta); ta.select();
+    try { document.execCommand('copy'); } catch(e){}
+    document.body.removeChild(ta);
+  }
+
+  function escapeHtml(s){
+    return String(s).replace(/[&<>"']/g, function(c){
+      return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];
+    });
+  }
+
+  function renderPhase(phase){
+    var s = phase.styles;
+
+    var questionsHtml = phase.questions.map(function(q, i){
+      var bullets = '';
+      if (q.bullets && q.bullets.length){
+        bullets = '<ul class="mt-3 space-y-2 text-slate-600">' +
+          q.bullets.map(function(b){ return '<li class="pl-5 relative before:content-[\'→\'] before:absolute before:left-0 before:text-slate-400 before:font-bold">' + escapeHtml(b) + '</li>'; }).join('') +
+        '</ul>';
+      }
+      var tags = (q.tags || []).map(function(t){
+        return '<span class="q-tag px-2.5 py-1 ' + s.tag + ' font-bold rounded">' + t + '</span>';
+      }).join('');
+      return '' +
+        '<div class="q-card p-5 bg-slate-50 border border-slate-200 rounded-xl transition ' + s.qHover + '">' +
+          '<div class="flex items-start gap-2 mb-3">' +
+            '<span class="q-num font-black text-slate-400 mt-0.5">Q' + (i+1) + '</span>' +
+            '<h4 class="font-bold text-slate-900 leading-snug flex-1">' + q.topic + '</h4>' +
+          '</div>' +
+          '<p class="text-slate-700"><span class="font-bold text-slate-900">Q:</span> ' + q.q + '</p>' +
+          bullets +
+          (tags ? '<div class="flex flex-wrap gap-2 pt-3">' + tags + '</div>' : '') +
+        '</div>';
+    }).join('');
+
+    var resourcesHtml = phase.resources.map(function(r){
+      return '' +
+        '<div class="resource-card relative p-5 bg-white border border-slate-200 rounded-xl transition hover:border-slate-300 hover:shadow-sm" data-url="' + r.url + '">' +
+          '<div class="flex items-start justify-between gap-2 mb-3">' +
+            '<span class="r-type px-2.5 py-1 ' + s.tag + ' font-bold rounded uppercase tracking-wide">' + r.type + '</span>' +
+            '<button class="copy-btn flex-shrink-0 w-7 h-7 rounded-md border border-slate-200 text-slate-500 hover:bg-slate-100 hover:text-slate-800 flex items-center justify-center transition" aria-label="Copy link">' +
+              '<svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15V5a2 2 0 012-2h10"/></svg>' +
+            '</button>' +
+          '</div>' +
+          '<h4 class="font-bold text-slate-900 mb-2">' + r.name + '</h4>' +
+          '<p class="text-slate-600 leading-relaxed mb-3">' + r.desc + '</p>' +
+          '<a href="' + r.url + '" target="_blank" rel="noopener" class="flex items-center justify-between gap-2 px-3 py-2.5 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-lg transition group">' +
+            '<code class="font-mono text-slate-700 truncate">' + r.label + '</code>' +
+            '<svg class="w-3.5 h-3.5 flex-shrink-0 text-slate-400 group-hover:text-slate-700 transition" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M8 7h9v9"/></svg>' +
+          '</a>' +
+        '</div>';
+    }).join('');
+
+    var qCount = phase.questions.length;
+    var rCount = phase.resources.length;
+
+    return '' +
+      '<section class="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden">' +
+        '<div class="p-6 border-b border-slate-200">' +
+          '<div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">' +
+            '<div class="flex-1">' +
+              '<span class="phase-badge inline-block px-3 py-1 ' + s.badge + ' font-bold rounded-full uppercase tracking-wider mb-3">' + phase.badge + '</span>' +
+              '<h2 class="phase-title font-bold text-slate-900">' + phase.title + '</h2>' +
+              '<p class="phase-desc text-slate-600 mt-3 max-w-3xl">' + phase.desc + '</p>' +
+            '</div>' +
+            '<div class="' + s.goalBg + ' border ' + s.goalBorder + ' rounded-xl p-4 text-right shrink-0 w-full md:w-auto">' +
+              '<span class="phase-goal-label ' + s.goalLabel + ' block font-bold uppercase tracking-wider">' + phase.goalLabel + '</span>' +
+              '<span class="phase-goal-value font-black ' + s.goalValue + '">' + phase.goalValue + '</span>' +
+            '</div>' +
+          '</div>' +
+        '</div>' +
+        '<div class="px-6 border-b border-slate-200 flex gap-4 md:gap-6 overflow-x-auto no-scrollbar">' +
+          '<button class="sub-tab active ' + s.subActive + '" data-sub="questions">Research Questions <span class="text-slate-400 font-bold">(' + qCount + ')</span></button>' +
+          '<button class="sub-tab" data-sub="resources">Useful Resources <span class="text-slate-400 font-bold">(' + rCount + ')</span></button>' +
+        '</div>' +
+        '<div class="p-6">' +
+          '<div class="sub-panel" data-sub="questions">' +
+            '<div class="grid grid-cols-1 lg:grid-cols-2 gap-5">' + questionsHtml + '</div>' +
+          '</div>' +
+          '<div class="sub-panel hidden" data-sub="resources">' +
+            '<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">' + resourcesHtml + '</div>' +
+          '</div>' +
+        '</div>' +
+      '</section>';
+  }
+
+  function initPhaseTabs(){
+    PHASES.forEach(function(phase){
+      var container = el('tab-' + phase.id);
+      if (!container) return;
+      container.innerHTML = renderPhase(phase);
+      qsa('.sub-tab', container).forEach(function(tab){
+        tab.addEventListener('click', function(){
+          qsa('.sub-tab', container).forEach(function(t){ t.classList.remove('active'); });
+          tab.classList.add('active');
+          var sub = tab.getAttribute('data-sub');
+          qsa('.sub-panel', container).forEach(function(p){
+            p.classList.toggle('hidden', p.getAttribute('data-sub') !== sub);
+          });
+        });
+      });
+      qsa('.resource-card', container).forEach(function(card){
+        var btn = card.querySelector('.copy-btn');
+        if (!btn) return;
+        btn.addEventListener('click', function(e){
+          e.preventDefault();
+          e.stopPropagation();
+          copyToClipboard(card.getAttribute('data-url'), btn);
+        });
+      });
+    });
+  }
+
+  var ALL_TABS = ['overview', 'p1', 'p2', 'p3', 'p4', 'cross'];
+  var currentTab = 'overview';
+
+  function switchTab(tabId, opts){
+    opts = opts || {};
+    if (ALL_TABS.indexOf(tabId) === -1) return;
+    currentTab = tabId;
+
+    qsa('.tab-content').forEach(function(c){ c.classList.add('hidden'); });
+    var target = el('tab-' + tabId);
+    if (target) target.classList.remove('hidden');
+
+    qsa('.tab-btn').forEach(function(btn){
+      var base = 'tab-btn';
+      if (btn.getAttribute('data-tab') === tabId){
+        btn.className = base + ' active-' + tabId;
+      } else {
+        btn.className = base;
+      }
+    });
+
+    if (opts.updateHash !== false){
+      history.replaceState(null, '', '#' + tabId);
+    }
+
+    // Scroll to just below the sticky nav, not the page top.
+    if (opts.scroll !== false && target){
+      var navEl = document.querySelector('nav');
+      var navHeight = navEl ? navEl.getBoundingClientRect().height : 0;
+      var scrollTo = target.getBoundingClientRect().top + window.pageYOffset - navHeight - 12;
+      window.scrollTo({ top: Math.max(0, scrollTo), behavior: 'smooth' });
+    }
+  }
+
+  // Tab nav buttons: don't scroll (content is right below the nav on mobile)
+  qsa('.tab-btn').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      switchTab(btn.getAttribute('data-tab'), { scroll: false });
+    });
+  });
+
+  // data-goto cards: scroll to content
+  qsa('[data-goto]').forEach(function(el2){
+    el2.addEventListener('click', function(){
+      switchTab(el2.getAttribute('data-goto'));
+    });
+  });
+
+  document.addEventListener('keydown', function(e){
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+    var phaseIdx = PHASES.findIndex(function(p){ return p.id === currentTab; });
+    if (phaseIdx === -1) return;
+    if (e.key === 'ArrowLeft' && phaseIdx > 0){ switchTab(PHASES[phaseIdx - 1].id, { scroll: false }); }
+    else if (e.key === 'ArrowRight' && phaseIdx < PHASES.length - 1){ switchTab(PHASES[phaseIdx + 1].id, { scroll: false }); }
+  });
+
+  initPhaseTabs();
+  var hash = window.location.hash.replace('#', '');
+  if (ALL_TABS.indexOf(hash) !== -1){ switchTab(hash, { scroll: false }); }
+  else { switchTab('overview', { scroll: false, updateHash: false }); }
+
+})();
+</script>
+
+</body>
+</html>
