@@ -185,7 +185,7 @@
           <div class="pipeline-card p-5 bg-sky-50 border-2 border-sky-500 rounded-xl hover:shadow-md transition cursor-pointer" data-goto="p1">
             <div class="flex justify-between items-center mb-2">
               <span class="pipeline-step text-sky-600 font-black uppercase">Step 1 — Phase 1</span>
-              <span class="pipeline-member px-2 py-0.5 bg-sky-200 text-sky-900 font-bold rounded-full">Member 1</span>
+              <span class="pipeline-member px-2 py-0.5 bg-sky-200 text-sky-900 font-bold rounded-full">Hemo</span>
             </div>
             <h3 class="font-bold text-slate-900 mb-1">Layered Caching</h3>
             <p class="text-slate-600 mb-3">Exact-match → semantic with NER verifier → provider prompt caching.</p>
@@ -198,7 +198,7 @@
           <div class="pipeline-card p-5 bg-indigo-50 border-2 border-indigo-500 rounded-xl hover:shadow-md transition cursor-pointer" data-goto="p2">
             <div class="flex justify-between items-center mb-2">
               <span class="pipeline-step text-indigo-600 font-black uppercase">Step 2 — Phase 2</span>
-              <span class="pipeline-member px-2 py-0.5 bg-indigo-200 text-indigo-900 font-bold rounded-full">Member 2</span>
+              <span class="pipeline-member px-2 py-0.5 bg-indigo-200 text-indigo-900 font-bold rounded-full">Mahdi</span>
             </div>
             <h3 class="font-bold text-slate-900 mb-1">Routing &amp; Decisions</h3>
             <p class="text-slate-600 mb-3">RouteLLM CPU baseline or System-1 classifier with rate-limit fallbacks.</p>
@@ -211,7 +211,7 @@
           <div class="pipeline-card p-5 bg-emerald-50 border-2 border-emerald-500 rounded-xl hover:shadow-md transition cursor-pointer" data-goto="p3">
             <div class="flex justify-between items-center mb-2">
               <span class="pipeline-step text-emerald-600 font-black uppercase">Step 3 — Phase 3</span>
-              <span class="pipeline-member px-2 py-0.5 bg-emerald-200 text-emerald-900 font-bold rounded-full">Member 3</span>
+              <span class="pipeline-member px-2 py-0.5 bg-emerald-200 text-emerald-900 font-bold rounded-full">Javad</span>
             </div>
             <h3 class="font-bold text-slate-900 mb-1">Context Optimization</h3>
             <p class="text-slate-600 mb-3">Lossless Headroom pruning followed by entropy token reduction.</p>
@@ -224,7 +224,7 @@
           <div class="pipeline-card p-5 bg-amber-50 border-2 border-amber-500 rounded-xl hover:shadow-md transition cursor-pointer" data-goto="p4">
             <div class="flex justify-between items-center mb-2">
               <span class="pipeline-step text-amber-600 font-black uppercase">Step 4 — Phase 4</span>
-              <span class="pipeline-member px-2 py-0.5 bg-amber-200 text-amber-900 font-bold rounded-full">Member 4</span>
+              <span class="pipeline-member px-2 py-0.5 bg-amber-200 text-amber-900 font-bold rounded-full">Sara</span>
             </div>
             <h3 class="font-bold text-slate-900 mb-1">Eval &amp; Telemetry</h3>
             <p class="text-slate-600 mb-3">DeepEval scoring, OpenTelemetry traces, transparency receipts.</p>
@@ -252,25 +252,25 @@
             <tbody class="divide-y divide-slate-200">
               <tr class="hover:bg-slate-50 cursor-pointer" data-goto="p1">
                 <td class="p-3 font-bold text-sky-600">Phase 1: Caching Layer</td>
-                <td class="p-3 font-semibold text-slate-900 whitespace-nowrap">Member 1</td>
+                <td class="p-3 font-semibold text-slate-900 whitespace-nowrap">Hemo</td>
                 <td class="p-3">Layered exact → semantic → prefix cache; NER false-hit mitigation; tenant isolation.</td>
                 <td class="p-3 font-mono font-bold text-sky-600">Cache hit &lt; 5 ms · 0% false hits</td>
               </tr>
               <tr class="hover:bg-slate-50 cursor-pointer" data-goto="p2">
                 <td class="p-3 font-bold text-indigo-600">Phase 2: Routing &amp; Decision Models</td>
-                <td class="p-3 font-semibold text-slate-900 whitespace-nowrap">Member 2</td>
+                <td class="p-3 font-semibold text-slate-900 whitespace-nowrap">Mahdi</td>
                 <td class="p-3">RouteLLM-MF baseline; System-1 JevK5/SemIf; cascades; hardware feasibility.</td>
                 <td class="p-3 font-mono font-bold text-indigo-600">APGR % · decision &lt; 15 ms</td>
               </tr>
               <tr class="hover:bg-slate-50 cursor-pointer" data-goto="p3">
                 <td class="p-3 font-bold text-emerald-600">Phase 3: Context &amp; Prompt Optimization</td>
-                <td class="p-3 font-semibold text-slate-900 whitespace-nowrap">Member 3</td>
+                <td class="p-3 font-semibold text-slate-900 whitespace-nowrap">Javad</td>
                 <td class="p-3">Lossless Headroom then entropy pruning (LLMLingua-2, DAC); output length control.</td>
                 <td class="p-3 font-mono font-bold text-emerald-600">3×–5× compression · &gt; 95% retention</td>
               </tr>
               <tr class="hover:bg-slate-50 cursor-pointer" data-goto="p4">
                 <td class="p-3 font-bold text-amber-600">Phase 4: Evaluation &amp; Observability</td>
-                <td class="p-3 font-semibold text-slate-900 whitespace-nowrap">Member 4</td>
+                <td class="p-3 font-semibold text-slate-900 whitespace-nowrap">Sara</td>
                 <td class="p-3">DeepEval, OTel <code class="text-[13px]">gen_ai.*</code> traces, transparency receipts, public datasets.</td>
                 <td class="p-3 font-mono font-bold text-amber-600">Quality retained per $ saved</td>
               </tr>
@@ -519,7 +519,7 @@
             </div>
             <div>
               <h4 class="font-bold text-slate-900 mb-1">Transparency Receipt schema</h4>
-              <p class="text-slate-600">Touches all four phases. Member 4 leads, but all contribute fields. Includes normal cost, chosen optimization, final cost, quality retained, and net savings.</p>
+              <p class="text-slate-600">Touches all four phases. Sara leads, but all contribute fields. Includes normal cost, chosen optimization, final cost, quality retained, and net savings.</p>
             </div>
           </div>
           <div class="cross-item p-5 bg-slate-50 border border-slate-200 rounded-xl flex gap-3">
@@ -528,7 +528,7 @@
             </div>
             <div>
               <h4 class="font-bold text-slate-900 mb-1">Candidate model pool</h4>
-              <p class="text-slate-600">Defined by Member 2, but shared with Member 1 (cache key) and Member 3 (compression threshold per model). Changes require re-embedding for CLM.</p>
+              <p class="text-slate-600">Defined by Mahdi, but shared with Hemo (cache key) and Javad (compression threshold per model). Changes require re-embedding for CLM.</p>
             </div>
           </div>
           <div class="cross-item p-5 bg-slate-50 border border-slate-200 rounded-xl flex gap-3">
@@ -537,7 +537,7 @@
             </div>
             <div>
               <h4 class="font-bold text-slate-900 mb-1">False-hit test suite</h4>
-              <p class="text-slate-600">Built by Member 4 but used daily by Member 1. Curated tricky pairs: entity swaps, negation, time-sensitive queries. Run before every semantic-cache change.</p>
+              <p class="text-slate-600">Built by Sara but used daily by Hemo. Curated tricky pairs: entity swaps, negation, time-sensitive queries. Run before every semantic-cache change.</p>
             </div>
           </div>
           <div class="cross-item p-5 bg-slate-50 border border-slate-200 rounded-xl flex gap-3">
@@ -546,7 +546,7 @@
             </div>
             <div>
               <h4 class="font-bold text-slate-900 mb-1">Public data strategy</h4>
-              <p class="text-slate-600">Owned by Member 4 but informs Member 3's quality regression suite. Synthetic and public datasets reduce dependence on real Metis data per the confidentiality brief.</p>
+              <p class="text-slate-600">Owned by Sara but informs Javad's quality regression suite. Synthetic and public datasets reduce dependence on real Metis data per the confidentiality brief.</p>
             </div>
           </div>
           <div class="cross-item p-5 bg-slate-50 border border-slate-200 rounded-xl flex gap-3">
@@ -555,7 +555,7 @@
             </div>
             <div>
               <h4 class="font-bold text-slate-900 mb-1">Compression ↔ Routing latency</h4>
-              <p class="text-slate-600">Member 3's compression threshold must align with Member 2's routing latency budget. Compression adds pre-processing latency before the router runs.</p>
+              <p class="text-slate-600">Javad's compression threshold must align with Mahdi's routing latency budget. Compression adds pre-processing latency before the router runs.</p>
             </div>
           </div>
         </div>
@@ -651,7 +651,7 @@
 
   var PHASES = [
     {
-      id: 'p1', num: 1, badge: 'Pillar 1 — Member 1 Lead',
+      id: 'p1', num: 1, badge: 'Pillar 1 — Hemo Lead',
       title: 'Phase 1: Caching Layer',
       desc: 'Intercepting requests at the frontline to serve cached responses using dense embeddings, vector stores, and entity-verification. Layered approach: exact-match → semantic with strict verification → provider-native prompt caching.',
       goalLabel: 'Primary Goal', goalValue: '< 5 ms latency · 0% false hits',
@@ -701,7 +701,7 @@
       ]
     },
     {
-      id: 'p2', num: 2, badge: 'Pillar 2 — Member 2 Lead',
+      id: 'p2', num: 2, badge: 'Pillar 2 — Mahdi Lead',
       title: 'Phase 2: Routing &amp; Decision Models',
       desc: 'Designing prompt complexity classifiers and System-1 decision engines to assign cache-missed queries between cheap SLMs and expensive frontier LLMs. CPU-first baseline (RouteLLM-MF/BERT) with GPU-backed decision models (JevK5, SemIf, Imajev) as upgrade paths.',
       goalLabel: 'Primary Goal', goalValue: '< 15 ms decision · high APGR %',
@@ -766,7 +766,7 @@
       ]
     },
     {
-      id: 'p3', num: 3, badge: 'Pillar 3 — Member 3 Lead',
+      id: 'p3', num: 3, badge: 'Pillar 3 — Javad Lead',
       title: 'Phase 3: Context &amp; Prompt Optimization',
       desc: 'Pruning redundant tokens, low-entropy context, and bloated background text (especially in RAG pipelines) before routing to frontier models. Lossless compression (Headroom, dedup, top-k, rerankers) first, then lossy methods (LLMLingua-2, DAC) after quality validation.',
       goalLabel: 'Primary Goal', goalValue: '3×–5× compression · > 95% retention',
@@ -820,7 +820,7 @@
       ]
     },
     {
-      id: 'p4', num: 4, badge: 'Pillar 4 — Member 4 Lead',
+      id: 'p4', num: 4, badge: 'Pillar 4 — Sara Lead',
       title: 'Phase 4: Evaluation, Observability &amp; Public Data',
       desc: 'Establishing the continuous evaluation framework, benchmarking datasets, OpenTelemetry tracing, and user-facing transparency receipts that quantify "Quality Retained per Dollar Saved". Also responsible for the false-hit test suite and the public/synthetic data strategy.',
       goalLabel: 'Primary Goal', goalValue: 'Quality / $ saved · full tracing',
